@@ -1,28 +1,31 @@
-const API_URL = 'http://localhost:8080'; // Correct base URL
+import axios from 'axios';
+
+const API_URL = 'http://localhost:8080'; // Base URL
+
+const api = axios.create({
+    baseURL: API_URL,
+    headers: {
+        'Content-Type': 'application/json',
+    },
+});
+
 
 export const getUsers = async () => {
     try {
-        const response = await fetch(`${API_URL}/user`);  // Correct endpoint here
-        if (!response.ok) throw new Error('Failed to fetch users');
-        const data = await response.json();
-        return data;
+        const response = await api.get('/user'); 
+        return response.data;
     } catch (error) {
-        console.error('Error fetching data: ', error);
+        console.error('Error fetching users:', error);
         return [];
     }
 };
 
- export const createUser = async (userData) => {
+export const createUser = async (userData) => {
     try {
-      const response = await fetch(`${API_URL}/users`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(userData),
-      });
-      if (!response.ok) throw new Error('Failed to create user');
-      return await response.json();
+        const response = await api.post('/users', userData);
+        return response.data;
     } catch (error) {
-      console.error(error);
-      return null;
+        console.error('Error creating user:', error.response?.data || error.message);
+        return null;
     }
-  };
+};

@@ -3,6 +3,7 @@ package com.fitness.fitness_app.service;
 import com.fitness.fitness_app.model.User;
 import com.fitness.fitness_app.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -14,6 +15,29 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    public void registerUser(String username, String email, String password) {
+        if (userRepository.findByEmail(email) != null) {
+            throw new RuntimeException("User already exists");
+        }
+
+        User newUser = new User();
+        newUser.setEmail(email);
+        newUser.setUsername(username);
+        newUser.setPassword(passwordEncoder.encode(password));
+
+        userRepository.save(newUser);
+    }
+
+    public boolean authenticateUser(String email, String password) {
+        User user = userRepository.findByEmail(email);
+        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
+            return true;
+        }
+        return false;
+
+    }
 
     public List<User> getAllUsers() {
         return userRepository.findAll();

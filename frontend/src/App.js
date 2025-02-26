@@ -1,28 +1,25 @@
 // src/App.js
-import React, { useState, useEffect } from 'react';
-import { getUsers } from './Api';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import SignUp from './components/SignUp';
+import Login from './components/Login';
+import './styles/style.css';
 
 function App() {
-  const [users, setUsers] = useState([]);
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      const data = await getUsers();
-      setUsers(data);
-    };
-
-    fetchUsers();
-  }, []);
-
   return (
-    <div>
-      <h1>Users List</h1>
-      <ul>
-        {users.map(user => (
-          <li key={user.id}>{user.username}</li>
-        ))}
-      </ul>
-    </div>
+    <Router>
+      <div className="App">
+        <nav>
+          <Link to="/signup">Sign Up</Link>
+          <Link to="/login">Login</Link>
+        </nav>
+
+        <Routes>
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/login" element={<Login />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
