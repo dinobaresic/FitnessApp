@@ -1,16 +1,15 @@
-// src/App.js
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import SignUp from './components/SignUp';
 import Login from './components/Login';
-import './styles/style.css';
+import './styles/output.css';  // Ovdje importiraj output.css umjesto style.css
 
 function App() {
   return (
     <Router>
       <div className="App">
-        <nav>
-          <Link to="/signup">Sign Up</Link>
+        <nav className="p-4 bg-gray-800 text-white">
+          <Link to="/signup" className="mr-4">Sign Up</Link>
           <Link to="/login">Login</Link>
         </nav>
 
