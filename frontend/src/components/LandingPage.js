@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import WhyChooseSection from "./WhyChooseSection";
+import Footer from "./Footer";
 
 const LandingPage = () => {
   return (
@@ -26,8 +27,12 @@ const LandingPage = () => {
       </div>
       
       <WhyChooseSection />
+
+      <Footer />
       
     </div>
+
+    
 
     
   );
