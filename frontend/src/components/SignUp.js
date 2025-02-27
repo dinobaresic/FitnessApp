@@ -22,7 +22,9 @@ const SignUp = () => {
     };
 
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-100">
+        
+       
+        <div className="flex justify-center items-center bg-gradient-to-r from-blue-800 via-purple-900 to-pink-500 min-h-screen">
             <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
                 <h1 className="text-3xl font-bold text-center text-gray-700 mb-6">Sign Up</h1>
                 <form onSubmit={handleSignUp} className="space-y-4">
@@ -57,6 +59,7 @@ const SignUp = () => {
                 {message && <p className="mt-4 text-center text-gray-700">{message}</p>}
             </div>
         </div>
+        
     );
 };
 
