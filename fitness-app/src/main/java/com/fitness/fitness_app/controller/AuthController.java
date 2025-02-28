@@ -18,7 +18,7 @@ public class AuthController {
     @PostMapping("/signup")
     public String signup(@RequestBody UserDTO userDTO) {
         try {
-            userService.registerUser(userDTO.getUsername(), userDTO.getEmail(), userDTO.getPassword());
+            userService.registerUser(userDTO.getUsername(), userDTO.getEmail(), userDTO.getPassword(), userDTO.getRole());
             return "User registered successfully";
         } catch (Exception e) {
             return e.getMessage();
@@ -30,7 +30,7 @@ public class AuthController {
     public String login(@RequestBody UserDTO userDTO) {
         try {
             if (userService.authenticateUser(userDTO.getEmail(), userDTO.getPassword())) {
-                return "User authenticated successfully";
+                return userService.getRole(userDTO.getEmail());
             } else {
                 return "Invalid credentials";
             }
@@ -38,6 +38,7 @@ public class AuthController {
             return e.getMessage();
         }
     }
+
 
 
 

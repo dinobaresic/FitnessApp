@@ -17,7 +17,7 @@ public class UserService {
     private UserRepository userRepository;
 
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    public void registerUser(String username, String email, String password) {
+    public void registerUser(String username, String email, String password, String role) {
         if (userRepository.findByEmail(email) != null) {
             throw new RuntimeException("User already exists");
         }
@@ -26,6 +26,7 @@ public class UserService {
         newUser.setEmail(email);
         newUser.setUsername(username);
         newUser.setPassword(passwordEncoder.encode(password));
+        newUser.setRole(role);
 
         userRepository.save(newUser);
     }
@@ -37,6 +38,11 @@ public class UserService {
         }
         return false;
 
+    }
+
+    public String getRole(String email) {
+        User user = userRepository.findByEmail(email);
+        return user.getRole();
     }
 
     public List<User> getAllUsers() {

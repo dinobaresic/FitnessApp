@@ -27,6 +27,10 @@ public class User {
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
     private Boolean deleted = false;
 
+   @Column(nullable = false)
+    private String role;
+
+
     @Column(nullable = true)
     private LocalDateTime deletedAt;
 
@@ -40,6 +44,14 @@ public class User {
 
     public String getPassword() {
         return password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public void setPassword(String password) {

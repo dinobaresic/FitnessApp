@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
+    const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -13,7 +15,15 @@ const Login = () => {
                 email: email,
                 password: password
             });
-            setMessage(response.data);
+            setMessage("Login successful");
+            // Redirect based on the role
+            if (response.data === "COACH") {
+                navigate("/coach-dashboard"); // Navigate to Coach Dashboard
+            } else if (response.data === "CLIENT") {
+                navigate("/client-dashboard");  // Navigate to Client Dashboard
+            } else {
+                navigate("/login");
+            }
         } catch (error) {
             setMessage(error.response ? error.response.data : "Error during login");
         }
