@@ -1,9 +1,15 @@
 package com.fitness.fitness_app.controller;
 
+import com.fitness.fitness_app.model.User;
 import com.fitness.fitness_app.model.UserDTO;
 import com.fitness.fitness_app.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -27,16 +33,23 @@ public class AuthController {
 
     // Login
     @PostMapping("/login")
-    public String login(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<?> login(@RequestBody UserDTO userDTO) {
         try {
             if (userService.authenticateUser(userDTO.getEmail(), userDTO.getPassword())) {
-                return userService.getRole(userDTO.getEmail());
+                User user = userService.getUserByEmail(userDTO.getEmail());
+                Map<String, Object> response = new HashMap<>();
+                response.put("userId", user.getId());
+                response.put("role", user.getRole());
+                return ResponseEntity.ok(response);
             } else {
-                return "Invalid credentials";
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("error", "Invalid credentials"));
             }
         } catch (Exception e) {
-            return e.getMessage();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", e.getMessage()));
         }
+
     }
 
 

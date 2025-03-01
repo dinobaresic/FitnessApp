@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Footer from "./Footer"; 
 
 const Login = () => {
     const [email, setEmail] = useState("");
@@ -15,21 +16,32 @@ const Login = () => {
                 email: email,
                 password: password
             });
-            setMessage("Login successful");
-            // Redirect based on the role
-            if (response.data === "COACH") {
-                navigate("/coach-dashboard"); // Navigate to Coach Dashboard
-            } else if (response.data === "CLIENT") {
-                navigate("/client-dashboard");  // Navigate to Client Dashboard
+            
+            localStorage.setItem("userId", response.data.userId);
+            localStorage.setItem("role", response.data.role);
+    
+            alert("Login successful!");
+    
+            // Redirect based on role
+            if (response.data.role === "COACH") {
+                window.location.href = "/coach-dashboard";
+            } else if (response.data.role === "CLIENT") {
+                window.location.href = "/client-dashboard";
             } else {
-                navigate("/login");
+                alert("Unknown role");
             }
         } catch (error) {
-            setMessage(error.response ? error.response.data : "Error during login");
+            // Check if the error is an object and display a meaningful message
+            const errorMessage = error.response && error.response.data
+                ? JSON.stringify(error.response.data)
+                : "Error during login";
+    
+            setMessage(errorMessage); // This will be rendered
         }
     };
 
     return (
+        <div className="relative min-h-screen">
         <div className="flex justify-center items-center bg-gradient-to-r from-blue-800 via-purple-900 to-pink-500 min-h-screen">
             <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg ">
                 <h1 className="text-3xl font-bold text-center text-gray-700 mb-6">Login</h1>
@@ -57,6 +69,10 @@ const Login = () => {
                 </form>
                 {message && <p className="mt-4 text-center text-gray-700">{message}</p>}
             </div>
+
+            </div>
+
+            <Footer />
         </div>
     );
 };

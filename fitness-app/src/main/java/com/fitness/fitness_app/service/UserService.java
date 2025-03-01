@@ -95,6 +95,12 @@ public class UserService {
     }
 
 
+    public Object findUsernameOrEmail(String clientIdentifier) {
+        return userRepository.findByUsernameOrEmail(clientIdentifier, clientIdentifier);
+    }
 
 
+    public Long  getId(User user) {
+        return user.getId();
+    }
 }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Entity
@@ -30,6 +31,28 @@ public class User {
    @Column(nullable = false)
     private String role;
 
+    @ManyToOne
+    @JoinColumn(name = "coach_id") // Foreign key to refer to Coach
+    private User coach;
+
+    @OneToMany(mappedBy = "coach")
+    private List<User> clients;
+
+    public User getCoach() {
+        return coach;
+    }
+
+    public void setCoach(User coach) {
+        this.coach = coach;
+    }
+
+    public List<User> getClients() {
+        return clients;
+    }
+
+    public void setClients(List<User> clients) {
+        this.clients = clients;
+    }
 
     @Column(nullable = true)
     private LocalDateTime deletedAt;
