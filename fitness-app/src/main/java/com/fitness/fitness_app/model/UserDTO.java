@@ -8,6 +8,12 @@ public class UserDTO {
 
     private String role;
 
+    public UserDTO() {
+    }
+
+    public UserDTO(String username, String email) {
+    }
+
     // Getters and setters
     public String getEmail() {
         return email;

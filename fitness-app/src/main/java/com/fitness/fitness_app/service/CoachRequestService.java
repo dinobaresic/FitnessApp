@@ -31,6 +31,8 @@ public class CoachRequestService implements ICoachRequestService{
         return coachRequestRepository.findByClientIdAndStatus(clientId, "PENDING");
     }
 
+
+
     public List<CoachRequest> findByClientId(Long clientId) {
         return coachRequestRepository.findByClientId(clientId);
     }

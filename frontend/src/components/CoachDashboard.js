@@ -8,14 +8,7 @@ const CoachDashboard = () => {
   const [pendingRequests, setPendingRequests] = useState([]);
   const [userId, setuserId] = useState(localStorage.getItem("userId"));
 
-  useEffect(() => {
-    axios
-      .get("http://localhost:8080/coach/clients", {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      })
-      .then((response) => setClients(response.data))
-      .catch((error) => console.error("Error fetching clients:", error));
-  }, []);
+ 
 
   const sendRequest = () => {
     axios
@@ -29,7 +22,26 @@ const CoachDashboard = () => {
   };
 
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId");
+  
+    if (!userId) {
+      console.error("User is not authenticated or userId is missing.");
+      return;
+    }
+  
+    axios
+      .get(`http://localhost:8080/requests/coach/clients/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response) => setClients(response.data))
+      .catch((error) => console.error("Error fetching clients:", error));
+  }, []);
+  
 
+
+/*
   useEffect(() => {
     axios
       .get("http://localhost:8080/coach/pending-requests", {
@@ -38,6 +50,7 @@ const CoachDashboard = () => {
       .then((response) => setPendingRequests(response.data))
       .catch((error) => console.error("Error fetching requests:", error));
   }, []);
+*/
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
@@ -66,7 +79,8 @@ const CoachDashboard = () => {
           {clients.length > 0 ? (
             clients.map((client) => (
               <li key={client.id} className="flex justify-between p-4 border-b">
-                <span className="text-lg font-medium">{client.name}</span>
+                <span className="text-lg font-medium">{client.username}</span>
+                <span className="text-lg font-medium">{client.email}</span>
                 <div>
                   <Link to={`/chat/${client.id}`} className="bg-green-500 text-white px-4 py-2 rounded-md mr-2">
                     Chat

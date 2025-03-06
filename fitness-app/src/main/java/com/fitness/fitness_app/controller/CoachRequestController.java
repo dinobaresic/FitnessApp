@@ -1,8 +1,10 @@
 package com.fitness.fitness_app.controller;
 
+import com.fitness.fitness_app.model.CoachClient;
 import com.fitness.fitness_app.model.CoachRequest;
 import com.fitness.fitness_app.model.CoachRequestDTO;
 import com.fitness.fitness_app.model.User;
+import com.fitness.fitness_app.repository.CoachClientRepository;
 import com.fitness.fitness_app.service.CoachRequestService;
 import com.fitness.fitness_app.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +22,11 @@ public class CoachRequestController {
 
     @Autowired
     private CoachRequestService coachRequestService;
-
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private CoachClientRepository coachClientRepository;
 
     @PostMapping("/send")
     public ResponseEntity<?> sendRequest(@RequestParam Long coachId, @RequestParam String clientIdentifier) {
@@ -70,12 +74,15 @@ public class CoachRequestController {
         }
 
         CoachRequest request = requestOpt.get();
+        User coach = request.getCoach();
+        User client = request.getClient();
 
         if (action.equalsIgnoreCase("accept")) {
             request.setStatus("ACCEPTED");
-            User client = request.getClient();
-            client.setCoach(request.getCoach());
+            client.setCoach(coach);
             userService.createUser(client);
+            CoachClient coachClient = new CoachClient(coach, client);
+            coachClientRepository.save(coachClient);
         } else {
             request.setStatus("DECLINED");
         }
