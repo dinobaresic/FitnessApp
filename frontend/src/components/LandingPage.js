@@ -7,7 +7,7 @@ const LandingPage = () => {
   return (
     <div className="relative min-h-screen bg-gradient-to-r from-blue-500 via-purple-600 to-pink-500 text-white">
       <div className="absolute inset-0 bg-black opacity-50"></div>
-      <div className="relative z-10 text-center px-4 md:px-8 flex flex-col justify-center items-center min-h-screen">
+      <div className="relative mx-28 z-10 text-center px-4 md:px-8 flex flex-col justify-center items-center min-h-screen">
         <h1 className="text-5xl font-extrabold leading-tight mb-4">
           Welcome to FitConnect
         </h1>
