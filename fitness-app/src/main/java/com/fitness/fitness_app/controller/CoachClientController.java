@@ -45,6 +45,7 @@ public class CoachClientController {
             }
 
             UserDTO clientInfoDTO = new UserDTO();
+            clientInfoDTO.setId(client.getId());
             clientInfoDTO.setUsername(client.getUsername());
             clientInfoDTO.setEmail(client.getEmail());
             listOfClientInfo.add(clientInfoDTO);

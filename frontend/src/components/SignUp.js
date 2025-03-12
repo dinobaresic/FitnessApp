@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import axios from "axios";
-import Footer from "./Footer";
 
 const SignUp = () => {
     const [email, setEmail] = useState("");
@@ -72,7 +71,6 @@ const SignUp = () => {
                 {message && <p className="mt-4 text-center text-gray-700">{message}</p>}
             </div>
         </div>
-        <Footer />
     </div>
     );
 };

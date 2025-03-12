@@ -6,6 +6,7 @@ import Navbar from "./components/Navbar";
 import LandingPage from './components/LandingPage';
 import CoachDashboard from './components/CoachDashboard';
 import ClientDashboard from './components/ClientDashboard';
+import Footer from './components/Footer';
 import './styles/output.css';  // Ovdje importiraj output.css umjesto style.css
 
 function App() {
@@ -23,6 +24,8 @@ function App() {
           <Route path="/login" element={<Login />} />
         </Routes>
       </div>
+
+      <Footer />
     </Router>
   );
 }

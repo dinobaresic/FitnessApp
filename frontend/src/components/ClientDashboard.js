@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Footer from "./Footer";
 
 const ClientDashboard = () => {
   const [workouts, setWorkouts] = useState([]);
@@ -25,7 +26,7 @@ const ClientDashboard = () => {
             console.error("Error fetching requests:", error);
             setError("Error fetching requests. Please try again later.");
         });
-}, [userId]); // Add userId to the dependency array to re-run when it changes
+}, [userId]); 
 
  
 
@@ -64,9 +65,8 @@ const handleRequest = (requestId, action) => {
 
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
+    <div className="min-h-screen  bg-gray-100 p-8">
 
-      
       
       <h1 className="text-4xl font-bold text-center text-purple-600 mb-6">
         Client Dashboard
@@ -74,7 +74,7 @@ const handleRequest = (requestId, action) => {
 
 
       {/* Incoming Requests */}
-      <div className="bg-white p-6 rounded-lg shadow-md mb-6">
+      <div className="bg-white p-10 rounded-lg shadow-md mb-6">
         <h2 className="text-2xl font-semibold mb-4">Coach Requests</h2>
         {requests.length > 0 ? (
           requests.map((req) => (
@@ -118,7 +118,6 @@ const handleRequest = (requestId, action) => {
           <p>No workouts assigned yet.</p>
         )}
       </div>
-      
     </div>
   );
 };

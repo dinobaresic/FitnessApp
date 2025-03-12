@@ -2,6 +2,7 @@ package com.fitness.fitness_app.model;
 
 public class UserDTO {
 
+    private Long id;
     private String username;
     private String email;
     private String password;
@@ -17,6 +18,14 @@ public class UserDTO {
     // Getters and setters
     public String getEmail() {
         return email;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getRole() {

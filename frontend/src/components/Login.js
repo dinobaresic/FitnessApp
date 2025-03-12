@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Footer from "./Footer"; 
 
 const Login = () => {
     const [email, setEmail] = useState("");
@@ -10,36 +9,35 @@ const Login = () => {
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
-        e.preventDefault();
-        try {
-            const response = await axios.post("http://localhost:8080/auth/login", {
-                email: email,
-                password: password
-            });
-            
-            localStorage.setItem("userId", response.data.userId);
-            localStorage.setItem("role", response.data.role);
-    
-            alert("Login successful!");
-    
-            // Redirect based on role
-            if (response.data.role === "COACH") {
-                window.location.href = "/coach-dashboard";
-            } else if (response.data.role === "CLIENT") {
-                window.location.href = "/client-dashboard";
-            } else {
-                alert("Unknown role");
-            }
-        } catch (error) {
-            // Check if the error is an object and display a meaningful message
-            const errorMessage = error.response && error.response.data
-                ? JSON.stringify(error.response.data)
-                : "Error during login";
-    
-            setMessage(errorMessage); // This will be rendered
-        }
-    };
+    e.preventDefault();
+    try {
+        const response = await axios.post("http://localhost:8080/auth/login", {
+            email: email,
+            password: password
+        });
+        
+        // Store user data in localStorage
+        localStorage.setItem("userId", response.data.userId);
+        localStorage.setItem("role", response.data.role);
 
+        alert("Login successful!");
+
+        // Redirect based on role
+        if (response.data.role === "COACH") {
+            window.location.href = "/coach-dashboard";
+        } else if (response.data.role === "CLIENT") {
+            window.location.href = "/client-dashboard";
+        } else {
+            alert("Unknown role");
+        }
+    } catch (error) {
+        const errorMessage = error.response && error.response.data
+            ? JSON.stringify(error.response.data)
+            : "Error during login";
+    
+        setMessage(errorMessage); // This will be rendered
+    }
+};
     return (
         <div className="relative min-h-screen">
         <div className="flex justify-center items-center bg-gradient-to-r from-blue-800 via-purple-900 to-pink-500 min-h-screen">
@@ -71,8 +69,6 @@ const Login = () => {
             </div>
 
             </div>
-
-            <Footer />
         </div>
     );
 };
