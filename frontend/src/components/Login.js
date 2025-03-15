@@ -20,7 +20,9 @@ const Login = () => {
         localStorage.setItem("userId", response.data.userId);
         localStorage.setItem("role", response.data.role);
 
-        alert("Login successful!");
+      //  alert("Login successful!");
+
+        
 
         // Redirect based on role
         if (response.data.role === "COACH") {
