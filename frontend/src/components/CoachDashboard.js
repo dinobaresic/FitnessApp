@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Checkbox } from "@mui/material";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Checkbox, TextField} from "@mui/material";
 import ChatPopup from "./ChatPopup";
 
 const CoachDashboard = () => {
@@ -9,6 +9,47 @@ const CoachDashboard = () => {
   const [userId, setUserId] = useState(localStorage.getItem("userId"));
   const [selectedClient, setSelectedClient] = useState(new Set());
   const [chatClient, setChatClient] = useState(null); // Tracks which client to chat with
+  // State for Video Upload
+  const [videoFile, setVideoFile] = useState(null);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+
+
+  const handleVideoChange = (event) => {
+    setVideoFile(event.target.files[0]);
+  };
+
+  const handleUpload = () => {
+    if (!videoFile || !title || !description || selectedClient.size === 0) {
+      alert("Please select a video, title, description, and at least one client.");
+      return;
+    }
+
+    selectedClient.forEach((clientId) => {
+      const formData = new FormData();
+      formData.append("video", videoFile);
+      formData.append("title", title);
+      formData.append("description", description);
+      formData.append("coachId", localStorage.getItem("userId"));
+      formData.append("clientId", clientId);
+
+      axios
+        .post("http://localhost:8080/workout-video/upload", formData, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then(() => alert("Video uploaded successfully!"))
+        .catch((error) => console.error("Error uploading video:", error));
+    });
+
+    // Reset fields after upload
+    setVideoFile(null);
+    setTitle("");
+    setDescription("");
+  };
+
 
   const sendRequest = () => {
     axios
@@ -121,6 +162,36 @@ const CoachDashboard = () => {
           </TableBody>
         </Table>
       </TableContainer>
+
+       {/* Video Upload Section */}
+       <div className="bg-white p-6 rounded-lg shadow-md mt-6">
+        <h2 className="text-2xl font-semibold mb-4">Upload Workout Video</h2>
+        <TextField
+          label="Video Title"
+          fullWidth
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          style={{ marginBottom: "10px" }}
+        />
+        <TextField
+          label="Description"
+          fullWidth
+          multiline
+          rows={3}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          style={{ marginBottom: "10px" }}
+        />
+        <input type="file" accept="video/*" onChange={handleVideoChange} />
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleUpload}
+          style={{ marginTop: "10px" }}
+        >
+          Upload Video
+        </Button>
+      </div>
 
       {/* Render ChatPopup when chatClient is set */}
       {chatClient && (

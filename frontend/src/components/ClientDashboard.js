@@ -1,21 +1,22 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ChatPopup from "./ChatPopup";
+import { Button } from "@mui/material";
 
 const ClientDashboard = () => {
-  const [workouts, setWorkouts] = useState([]);
+  
   const [requests, setRequests] = useState([]);
   const [error, setError] = useState(""); // Error state
   const [userId, setuserId] = useState(localStorage.getItem("userId"));
   const [chatCoach, setChatCoach] = useState(null);
   const [coaches, setCoaches] = useState([]);
+  const [workoutVideos, setWorkoutVideos] = useState([]);
 
   useEffect(() => {
 
     const userId = localStorage.getItem("userId");
     const token = localStorage.getItem("token");
 
-    console.log("UserId:", userId); // Check the value of userId
     axios
         .get(`http://localhost:8080/coach-requests/client/requests`, {
             params: {
@@ -38,12 +39,18 @@ const ClientDashboard = () => {
       .then((response) => setCoaches(response.data))
       .catch((error) => console.error("Error fetching coach:", error));
 
+
+    axios.get(`http://localhost:8080/workout-video/client/${userId}`, {
+      headers
+      : { Authorization: `Bearer ${token}` },
+    })
+    .then((response) => setWorkoutVideos(response.data))
+    .catch((error) => console.error("Error fetching workouts:", error));
+
 }, [userId]); 
 
 
 const openChat = (coachId, coachName) => {
-  console.log("Opening chat with coachId:", coachId); //Debug
-  console.log("Opening chat with coachName:", coachName); //Debug
   setChatCoach({ coachId, coachName });
 };
 
@@ -116,21 +123,6 @@ const handleRequest = (requestId, action) => {
         )}
       </div>
 
-      {/* Workouts */}
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-2xl font-semibold mb-4">Today's Workout</h2>
-        {workouts.length > 0 ? (
-          workouts.map((workout, index) => (
-            <div key={index} className="p-4 border-b">
-              <h3 className="text-lg font-medium">{workout.title}</h3>
-              <p className="text-gray-700">{workout.description}</p>
-            </div>
-          ))
-        ) : (
-          <p>No workouts assigned yet.</p>
-        )}
-      </div>
-
        {/* Coach List for Chat */}
        <div className="bg-white p-6 rounded-lg shadow-md mb-6">
         <h2 className="text-2xl font-semibold mb-4">Chat with Your Coaches</h2>
@@ -141,18 +133,41 @@ const handleRequest = (requestId, action) => {
               className="p-4 border-b flex justify-between items-center"
             >
               <span className="text-lg font-medium">{coach.username}</span>
-              <button
+              <Button
                 onClick={() => openChat(coach.id, coach.username)}
-                className="bg-blue-500 text-white px-4 py-2 rounded-md"
+                variant="contained"
+                color="primary"
+                style={{ marginRight: "10px" }}
               >
                 Chat
-              </button>
+              </Button>
             </div>
           ))
         ) : (
           <p>No assigned coaches yet.</p>
         )}
       </div>
+
+      {/* Workouts */}
+      <div className="bg-white p-6 rounded-lg shadow-md">
+        <h2 className="text-2xl font-semibold mb-4">Today's Workout</h2>
+        {workoutVideos.length > 0 ? (
+          workoutVideos.map((video) => (
+            <div key={video.id} className="mb-4">
+            <h3 className="text-xl font-semibold">{video.title}</h3>
+            <p>{video.description}</p>
+            <video width="100%" controls>
+            <source src={`http://localhost:8080/workout-video/get/${video.id}`} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+          ))
+        ) : (
+          <p>No workouts assigned yet.</p>
+        )}
+      </div>
+
+      
 
        {/* Render ChatPopup when chatCoach is set */}
       {chatCoach && (

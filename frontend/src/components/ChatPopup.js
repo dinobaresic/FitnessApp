@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
@@ -9,11 +9,9 @@ const ChatPopup = ({ clientId, clientName, isVisible, onClose }) => {
   const [newMessage, setNewMessage] = useState("");
   const userId = localStorage.getItem("userId");
 
+  const chatContainerRef = useRef(null); // Create a ref for the chat container
+
   useEffect(() => {
-
-    console.log("Fetching messages between userId:", userId, "and clientId:", clientId);
-    console.log("Name : ", clientName) // Debug
-
     if (isVisible) {
       axios
         .get(`http://localhost:8080/chat/messages/between?senderId=${userId}&receiverId=${clientId}`, {
@@ -23,6 +21,13 @@ const ChatPopup = ({ clientId, clientName, isVisible, onClose }) => {
         .catch((error) => console.error("Error fetching messages:", error));
     }
   }, [isVisible, clientId]);
+
+  // Scroll to the bottom of the chat container whenever messages change
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  }, [messages]); // This effect will run every time the messages change
 
   const sendMessage = () => {
     if (!newMessage.trim()) return;
@@ -43,8 +48,8 @@ const ChatPopup = ({ clientId, clientName, isVisible, onClose }) => {
         }
       )
       .then((response) => {
-        setMessages((prevMessages) => [...prevMessages, response.data]); // Add the new message to the chat
-        setNewMessage(""); // Clear the input field
+        setMessages((prevMessages) => [...prevMessages, response.data]); 
+        setNewMessage(""); 
       })
       .catch((error) => console.error("Error sending message:", error));
   };
@@ -62,14 +67,36 @@ const ChatPopup = ({ clientId, clientName, isVisible, onClose }) => {
           p: 4,
           width: 500,
           maxHeight: 600,
+          minHeight: 500,
           overflowY: "auto",
           borderRadius: 4,
+          display: "flex",
+          flexDirection: "column",
         }}
       >
         <h2>Chat with {clientName}</h2>
-        <div style={{ maxHeight: 400, overflowY: "auto", marginBottom: "16px" }}>
+        <div
+          ref={chatContainerRef} // Attach the ref to the chat container
+          style={{
+            flex: 1,
+            maxHeight: 400,
+            minHeight: 300,
+            overflowY: "auto",
+            marginBottom: "16px",
+            paddingRight: "8px",
+          }}
+        >
           {messages.length === 0 ? (
-            <p>No messages yet.</p>
+            <div
+              style={{
+                textAlign: "center",
+                paddingTop: "50px",
+                color: "gray",
+                fontSize: "16px",
+              }}
+            >
+              No messages yet.
+            </div>
           ) : (
             messages.map((msg, index) => (
               <div
@@ -85,6 +112,7 @@ const ChatPopup = ({ clientId, clientName, isVisible, onClose }) => {
                     padding: "8px 12px",
                     borderRadius: "10px",
                     backgroundColor: msg.senderId == userId ? "#e3f2fd" : "#c8e6c9",
+                    maxWidth: "70%",
                   }}
                 >
                   {msg.content}
