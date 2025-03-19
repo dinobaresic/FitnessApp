@@ -36,10 +36,7 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     );
 
 
-
-
-
-
-
+    // Retrieve all unread messages for a specific user
+    List<Message> findByReceiverIdAndReadFalse(Long receiverId);
 
 }

@@ -25,6 +25,9 @@ public class Message {
     @Column(name = "timestamp", nullable = false)
     private LocalDateTime timestamp;
 
+    @Column(nullable = false)
+    private boolean read = false; // Whether the message has been read
+
 
 
     public Message() {
@@ -59,6 +62,14 @@ public class Message {
 
     public Long getReceiverId() {
         return receiverId;
+    }
+
+    public boolean isRead() {
+        return read;
+    }
+
+    public void setRead(boolean read) {
+        this.read = read;
     }
 
     public void setReceiverId(Long receiverId) {

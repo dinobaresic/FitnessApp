@@ -10,6 +10,10 @@ const ChatPopup = ({ clientId, clientName, isVisible, onClose }) => {
   const userId = localStorage.getItem("userId");
 
   useEffect(() => {
+
+    console.log("Fetching messages between userId:", userId, "and clientId:", clientId);
+    console.log("Name : ", clientName) // Debug
+
     if (isVisible) {
       axios
         .get(`http://localhost:8080/chat/messages/between?senderId=${userId}&receiverId=${clientId}`, {

@@ -43,4 +43,21 @@ public class MessageService {
     }
 
 
+    // Fetch all unread messages for a specific user
+    public List<Message> getUnreadMessages(Long receiverId) {
+        return messageRepository.findByReceiverIdAndReadFalse(receiverId);
+    }
+
+    // Mark all messages for a specific user as read
+    public void markMessagesAsRead(Long receiverId) {
+        List<Message> unreadMessages = messageRepository.findByReceiverIdAndReadFalse(receiverId);
+        for (Message message : unreadMessages) {
+            message.setRead(true);
+            messageRepository.save(message);
+        }
+    }
+
+
+
+
 }

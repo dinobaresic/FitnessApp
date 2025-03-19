@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface ICoachClientService {
     List<CoachClient> findClientsForCoach(Long coachId);
+    List<CoachClient> findCoachByClientId(Long clientId);
 }

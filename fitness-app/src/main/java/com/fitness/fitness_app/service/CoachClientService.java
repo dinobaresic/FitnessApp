@@ -1,6 +1,7 @@
 package com.fitness.fitness_app.service;
 
 import com.fitness.fitness_app.model.CoachClient;
+import com.fitness.fitness_app.model.CoachRequest;
 import com.fitness.fitness_app.model.User;
 import com.fitness.fitness_app.repository.CoachClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,10 @@ public class CoachClientService implements ICoachClientService{
         return clients;
     }
 
+    @Override
+    public List<CoachClient> findCoachByClientId(Long clientId) {
+        return coachClientRepository.findCoachClientByClientId(clientId);
+    }
 
 
 }

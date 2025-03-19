@@ -20,6 +20,7 @@ public class AuthController {
 
 
 
+
     // Sign up
     @PostMapping("/signup")
     public String signup(@RequestBody UserDTO userDTO) {
@@ -30,6 +31,7 @@ public class AuthController {
             return e.getMessage();
         }
     }
+
 
     // Login
     @PostMapping("/login")
@@ -51,6 +53,9 @@ public class AuthController {
         }
 
     }
+
+
+
 
 
 

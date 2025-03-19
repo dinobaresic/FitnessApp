@@ -6,6 +6,7 @@ import com.fitness.fitness_app.model.UserDTO;
 import com.fitness.fitness_app.service.CoachClientService;
 import com.fitness.fitness_app.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,6 +57,40 @@ public class CoachClientController {
 
         return ResponseEntity.ok(listOfClientInfo);
     }
+
+
+    @GetMapping("/client/coaches/{clientId}")
+    public ResponseEntity<?> getCoachForClientId(@PathVariable Long clientId) {
+        if (clientId == null) {
+            return ResponseEntity.badRequest().body("clientId is required");
+        }
+
+        List<CoachClient> listOfClientsConnections = coachClientService.findCoachByClientId(clientId);
+
+        List<UserDTO> listOfCoachInfo = new ArrayList<>();
+        for (CoachClient coachClient : listOfClientsConnections) {
+            if (coachClient.getClient() == null) {
+                return ResponseEntity.status(500).body("Error: Client is null in CoachClient");
+            }
+
+            User coach = coachClient.getCoach();
+            if (coach.getUsername() == null || coach.getEmail() == null) {
+                return ResponseEntity.status(500).body("Error: Client details (username or email) are null");
+            }
+
+            UserDTO coachInfoDTO = new UserDTO();
+            coachInfoDTO.setId(coach.getId());
+            coachInfoDTO.setUsername(coach.getUsername());
+            coachInfoDTO.setEmail(coach.getEmail());
+            listOfCoachInfo.add(coachInfoDTO);
+
+            System.out.println("Client found: " + coach.getUsername());
+
+        }
+
+        return ResponseEntity.ok(listOfCoachInfo);
+    }
+
 
 
 }
