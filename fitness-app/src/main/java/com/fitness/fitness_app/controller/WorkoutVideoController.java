@@ -1,23 +1,14 @@
 package com.fitness.fitness_app.controller;
-
-import com.fitness.fitness_app.model.User;
 import com.fitness.fitness_app.model.WorkoutVideo;
 import com.fitness.fitness_app.service.WorkoutVideoService;
-import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
@@ -55,7 +46,8 @@ public class WorkoutVideoController {
             WorkoutVideo workoutVideo = workoutVideoService.uploadVideo(video, title, description, coachId, clientId);
             return ResponseEntity.ok(workoutVideo);
         } catch (IOException e) {
-            return ResponseEntity.status(500).body(null); // Handle file upload error
+            return ResponseEntity.status(500).body(null);
+
         }
     }
 

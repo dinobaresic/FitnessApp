@@ -2,6 +2,13 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ChatPopup from "./ChatPopup";
 import { Button } from "@mui/material";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, EffectCoverflow } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/effect-coverflow";
+
 
 const ClientDashboard = () => {
   
@@ -150,22 +157,40 @@ const handleRequest = (requestId, action) => {
 
       {/* Workouts */}
       <div className="bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-2xl font-semibold mb-4">Today's Workout</h2>
-        {workoutVideos.length > 0 ? (
-          workoutVideos.map((video) => (
-            <div key={video.id} className="mb-4">
-            <h3 className="text-xl font-semibold">{video.title}</h3>
-            <p>{video.description}</p>
-            <video width="100%" controls>
-            <source src={`http://localhost:8080/workout-video/get/${video.id}`} type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          </div>
-          ))
-        ) : (
-          <p>No workouts assigned yet.</p>
-        )}
-      </div>
+      <h2 className="text-2xl font-semibold mb-4">Today's Workout</h2>
+
+      {workoutVideos.length > 0 ? (
+        <Swiper
+          modules={[Navigation, Pagination, EffectCoverflow]}
+          spaceBetween={20}
+          slidesPerView={1}
+          navigation
+          pagination={{ clickable: true }}
+          effect="coverflow"
+          centeredSlides={true}
+          loop={true}
+          className="mySwiper"
+        >
+          {workoutVideos.map((video) => (
+            <SwiperSlide key={video.id} className="flex justify-center">
+              <div className="p-4 bg-gray-100 rounded-lg shadow-lg max-w-lg">
+                <h3 className="text-xl font-semibold mb-2">{video.title}</h3>
+                <p className="text-gray-600 mb-2">{video.description}</p>
+                <video width="100%" controls className="rounded-lg">
+                  <source
+                    src={`http://localhost:8080/workout-video/get/${video.id}`}
+                    type="video/mp4"
+                  />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      ) : (
+        <p>No workouts assigned yet.</p>
+      )}
+    </div>
 
       
 
